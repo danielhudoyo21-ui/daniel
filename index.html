@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A romantic interactive heart animation with personalized message">
+    <meta name="description" content="A romantic interactive heart animation with personalized message and music">
     <title>Love You Livyy</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -31,6 +31,71 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
+        }
+        
+        /* Profile Image Container */
+        #profileImageContainer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 15;
+            opacity: 0;
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+        
+        #profileImage {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #ff3366;
+            object-fit: cover;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.6);
+            transition: all 0.3s ease;
+        }
+        
+        #profileImage:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.9);
+        }
+        
+        /* Music Control */
+        #musicControl {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 15;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        #musicToggle {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #musicToggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(102, 126, 234, 0.8);
+        }
+        
+        #musicToggle:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+        
+        .music-icon {
+            font-size: 1.2rem;
         }
         
         /* Love text animation */
@@ -59,6 +124,17 @@
             100% {
                 transform: translate(-50%, -50%) scale(1) rotate(0deg);
                 opacity: 0.9;
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
         
@@ -138,6 +214,24 @@
             outline-offset: 2px;
         }
         
+        /* Music Player Info */
+        #musicInfo {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #ff5e7e;
+            font-size: 0.9rem;
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.5);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 2s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        
         /* Responsive design for mobile */
         @media (max-width: 768px) {
             #centerName {
@@ -155,6 +249,21 @@
                 bottom: 20px;
             }
             
+            #profileImage {
+                width: 80px;
+                height: 80px;
+            }
+            
+            #profileImageContainer {
+                top: 15px;
+                right: 15px;
+            }
+            
+            #musicToggle {
+                padding: 8px 16px;
+                font-size: 0.8rem;
+            }
+            
             .love-text {
                 font-size: 9px;
             }
@@ -168,6 +277,16 @@
             #startBtn {
                 padding: 10px 25px;
                 font-size: 0.95rem;
+            }
+            
+            #profileImage {
+                width: 70px;
+                height: 70px;
+            }
+            
+            #musicToggle {
+                padding: 8px 15px;
+                font-size: 0.75rem;
             }
             
             .love-text {
@@ -193,11 +312,38 @@
 </head>
 <body>
     <div id="container">
+        <!-- Music Control -->
+        <div id="musicControl">
+            <button id="musicToggle" aria-label="Toggle music">
+                <span class="music-icon">🎵</span> Music
+            </button>
+        </div>
+        
+        <!-- Profile Image -->
+        <div id="profileImageContainer">
+            <img 
+                id="profileImage" 
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop" 
+                alt="Mas Bahlil Ganteng"
+                title="Mas Bahlil Ganteng"
+            >
+        </div>
+        
         <button id="startBtn" aria-label="Start heart animation">kiwwww</button>
         <button id="resetBtn" aria-label="Reset animation">Reset</button>
+        
         <!-- Center name element hidden at start -->
         <div id="centerName" role="img" aria-label="Livyy">Livyy</div>
+        
+        <!-- Music Info -->
+        <div id="musicInfo">🎶 Now Playing: Mas Bahlil Ganteng</div>
     </div>
+
+    <!-- Audio Element for Music -->
+    <audio id="audioPlayer" preload="auto">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <script>
         /**
@@ -209,7 +355,8 @@
             animationDelay: 20,
             scale: 18,
             scaleSmall: 10,
-            colors: ['#ff3366', '#ff5e7e', '#ff8da1', '#ffb3c1']
+            colors: ['#ff3366', '#ff5e7e', '#ff8da1', '#ffb3c1'],
+            musicUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
         };
         
         // Cache DOM elements
@@ -217,11 +364,42 @@
             container: document.getElementById('container'),
             startBtn: document.getElementById('startBtn'),
             resetBtn: document.getElementById('resetBtn'),
-            centerName: document.getElementById('centerName')
+            centerName: document.getElementById('centerName'),
+            audioPlayer: document.getElementById('audioPlayer'),
+            musicToggle: document.getElementById('musicToggle'),
+            profileImage: document.getElementById('profileImage'),
+            musicInfo: document.getElementById('musicInfo')
         };
         
         let animationRunning = false;
         let animationFrameId = null;
+        let musicPlaying = false;
+
+        /**
+         * Initialize audio player
+         */
+        function initAudio() {
+            elements.audioPlayer.volume = 0.5;
+            elements.audioPlayer.loop = true;
+        }
+
+        /**
+         * Toggle music playback
+         */
+        function toggleMusic() {
+            if (musicPlaying) {
+                elements.audioPlayer.pause();
+                elements.musicToggle.innerHTML = '<span class="music-icon">🎵</span> Music';
+                musicPlaying = false;
+            } else {
+                elements.audioPlayer.play().catch(err => {
+                    console.log('Audio play failed:', err);
+                    alert('Please enable autoplay or click the music button after animation starts');
+                });
+                elements.musicToggle.innerHTML = '<span class="music-icon">🎶</span> Music';
+                musicPlaying = true;
+            }
+        }
 
         /**
          * Heart animation with "Love You" text arranged in heart shape
@@ -230,6 +408,11 @@
         function buatHati() {
             if (animationRunning) return;
             animationRunning = true;
+            
+            // Auto-play music when animation starts
+            if (!musicPlaying) {
+                toggleMusic();
+            }
             
             // Hide button and show reset after animation
             elements.startBtn.style.display = 'none';
@@ -299,15 +482,28 @@
             elements.centerName.style.opacity = '0';
             elements.centerName.style.transform = 'scale(0)';
             
+            // Pause music
+            if (musicPlaying) {
+                toggleMusic();
+            }
+            
             // Show start button again
             elements.startBtn.style.display = 'block';
             elements.resetBtn.style.display = 'none';
             elements.startBtn.focus();
         }
         
+        /**
+         * Update profile image from URL
+         */
+        function updateProfileImage(imageUrl) {
+            elements.profileImage.src = imageUrl;
+        }
+        
         // Event listeners
         elements.startBtn.addEventListener('click', buatHati);
         elements.resetBtn.addEventListener('click', resetAnimation);
+        elements.musicToggle.addEventListener('click', toggleMusic);
         
         // Keyboard support for accessibility
         document.addEventListener('keydown', (event) => {
@@ -315,6 +511,8 @@
                 buatHati();
             } else if (event.key === 'Escape' && elements.resetBtn.style.display !== 'none') {
                 resetAnimation();
+            } else if (event.key === 'm' || event.key === 'M') {
+                toggleMusic();
             }
         });
         
@@ -323,7 +521,13 @@
             if (animationFrameId) {
                 cancelAnimationFrame(animationFrameId);
             }
+            if (musicPlaying) {
+                elements.audioPlayer.pause();
+            }
         });
+        
+        // Initialize
+        initAudio();
     </script>
 </body>
 </html>
