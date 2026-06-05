@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A romantic interactive heart animation with personalized message">
+    <title>Love You Livyy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #050505 0%, #1a0a1f 100%);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', 'Arial', sans-serif;
+        }
+        
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Love text animation */
+        .love-text {
+            position: absolute;
+            color: #ff3366;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            animation: muncul 1.5s forwards ease-out;
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.8);
+            will-change: transform, opacity;
+            pointer-events: none;
+        }
+        
+        @keyframes muncul {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 0.9;
+            }
+        }
+        
+        /* Center name styling */
+        #centerName {
+            position: absolute;
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px #ff3366, 0 0 30px #ff3366;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 1s ease-in-out;
+            z-index: 5;
+            will-change: transform, opacity;
+            text-align: center;
+        }
+        
+        /* Start button styling */
+        #startBtn {
+            position: absolute;
+            z-index: 10;
+            padding: 15px 35px;
+            background: linear-gradient(45deg, #ff3366, #ff6b8b);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #startBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 51, 102, 0.8);
+        }
+        
+        #startBtn:active {
+            transform: scale(0.95);
+        }
+        
+        #startBtn:focus {
+            outline: 2px solid #ff3366;
+            outline-offset: 2px;
+        }
+        
+        /* Reset button styling */
+        #resetBtn {
+            position: absolute;
+            z-index: 10;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            display: none;
+            bottom: 30px;
+        }
+        
+        #resetBtn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
+        }
+        
+        #resetBtn:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+        
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            #centerName {
+                font-size: 2rem;
+            }
+            
+            #startBtn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            
+            #resetBtn {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+                bottom: 20px;
+            }
+            
+            .love-text {
+                font-size: 9px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #centerName {
+                font-size: 1.5rem;
+            }
+            
+            #startBtn {
+                padding: 10px 25px;
+                font-size: 0.95rem;
+            }
+            
+            .love-text {
+                font-size: 8px;
+            }
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .love-text {
+                animation: none;
+                opacity: 0.9;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            
+            #centerName {
+                transition: none;
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <button id="startBtn" aria-label="Start heart animation">kiwwww</button>
+        <button id="resetBtn" aria-label="Reset animation">Reset</button>
+        <!-- Center name element hidden at start -->
+        <div id="centerName" role="img" aria-label="Livyy">Livyy</div>
+    </div>
+
+    <script>
+        /**
+         * Configuration object for easy customization
+         */
+        const config = {
+            text: "Love You",
+            totalTexts: 180,
+            animationDelay: 20,
+            scale: 18,
+            scaleSmall: 10,
+            colors: ['#ff3366', '#ff5e7e', '#ff8da1', '#ffb3c1']
+        };
+        
+        // Cache DOM elements
+        const elements = {
+            container: document.getElementById('container'),
+            startBtn: document.getElementById('startBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            centerName: document.getElementById('centerName')
+        };
+        
+        let animationRunning = false;
+        let animationFrameId = null;
+
+        /**
+         * Heart animation with "Love You" text arranged in heart shape
+         * Uses mathematical parametric equations for heart curve
+         */
+        function buatHati() {
+            if (animationRunning) return;
+            animationRunning = true;
+            
+            // Hide button and show reset after animation
+            elements.startBtn.style.display = 'none';
+            
+            // Show center name with smooth animation
+            elements.centerName.style.opacity = '1';
+            elements.centerName.style.transform = 'scale(1)';
+            
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            // Responsive scale
+            const skala = window.innerWidth < 480 ? config.scaleSmall : config.scale;
+            
+            let i = 0;
+            
+            /**
+             * Render heart shape text one by one with optimized timing
+             * Uses parametric heart curve equations
+             */
+            function renderSatuPerSatu() {
+                if (i < config.totalTexts) {
+                    const t = (i / config.totalTexts) * 2 * Math.PI;
+                    
+                    // Mathematical heart curve parametric equations
+                    const rX = 16 * Math.pow(Math.sin(t), 3);
+                    const rY = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+                    
+                    const x = centerX + (rX * skala);
+                    const y = centerY - (rY * skala);
+                    
+                    // Create text element
+                    const span = document.createElement('span');
+                    span.innerText = config.text;
+                    span.className = 'love-text';
+                    span.style.left = x + 'px';
+                    span.style.top = y + 'px';
+                    
+                    // Random color from palette
+                    span.style.color = config.colors[Math.floor(Math.random() * config.colors.length)];
+                    
+                    elements.container.appendChild(span);
+                    
+                    i++;
+                    setTimeout(renderSatuPerSatu, config.animationDelay);
+                } else {
+                    animationRunning = false;
+                    elements.resetBtn.style.display = 'block';
+                    elements.resetBtn.focus();
+                }
+            }
+            
+            renderSatuPerSatu();
+        }
+        
+        /**
+         * Reset animation to initial state
+         */
+        function resetAnimation() {
+            animationRunning = false;
+            
+            // Clear all love text elements
+            const loveTexts = document.querySelectorAll('.love-text');
+            loveTexts.forEach(text => text.remove());
+            
+            // Reset center name
+            elements.centerName.style.opacity = '0';
+            elements.centerName.style.transform = 'scale(0)';
+            
+            // Show start button again
+            elements.startBtn.style.display = 'block';
+            elements.resetBtn.style.display = 'none';
+            elements.startBtn.focus();
+        }
+        
+        // Event listeners
+        elements.startBtn.addEventListener('click', buatHati);
+        elements.resetBtn.addEventListener('click', resetAnimation);
+        
+        // Keyboard support for accessibility
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && elements.startBtn.style.display !== 'none') {
+                buatHati();
+            } else if (event.key === 'Escape' && elements.resetBtn.style.display !== 'none') {
+                resetAnimation();
+            }
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
+        });
+    </script>
+</body>
+</html>
